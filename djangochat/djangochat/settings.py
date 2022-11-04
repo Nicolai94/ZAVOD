@@ -45,8 +45,6 @@ INSTALLED_APPS = [
     'room.apps.RoomConfig',
 ]
 
-CSRF_TRUSTED_ORIGINS=['https://fb7f-46-53-244-240.eu.ngrok.io']
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
