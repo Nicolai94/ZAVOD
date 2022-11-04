@@ -29,16 +29,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = data['message']
         username = data['username']
         room = data['room']
+        mtype = data['type']
 
-        await self.save_message(username, room, message)
+        await self.save_message(username, room, message, mtype)
 
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'chat_message',
+                'type': mtype,
                 'message': message,
                 'username': username,
                 'room': room,
+
+
             }
         )
 
@@ -54,7 +57,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
     @sync_to_async
-    def save_message(self, username, room, message):
+    def save_message(self, username, room, message, mtype):
         user = User.objects.get(username=username)
         room = Room.objects.get(slug=room)
-        Messages.objects.create(user=user, room=room, content=message)
+        Messages.objects.create(user=user, room=room, content=message, type=mtype)
+
+    async def chat_photo(self, event):
+        await self.send(text_data=json.dumps(event))
